@@ -21,6 +21,7 @@
 
 #include "layout.h"
 
+
 // Zone map: 1x2 (1 column, 2 rows)
 // Each zone is full width, 1/2 height
 // clang-format off

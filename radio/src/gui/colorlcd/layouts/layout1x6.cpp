@@ -22,6 +22,7 @@
 #include "layout.h"
 #include "translations/translations.h"
 
+
 // 6x1 layout: 6 rows, 1 column
 // Single column with 6 vertical zones
 

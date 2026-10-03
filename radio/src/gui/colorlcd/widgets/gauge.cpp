@@ -24,6 +24,7 @@
 #include "edgetx.h"
 #include "static.h"
 
+
 class GaugeWidget : public Widget
 {
  public:

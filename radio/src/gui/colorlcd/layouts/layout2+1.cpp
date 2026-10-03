@@ -21,6 +21,7 @@
 
 #include "layout.h"
 
+
 // Zone map: 2+1 (2 small zones + 1 large zone)
 // Left: 2 zones stacked (1/2 width, 1/2 height each), Right: 1 full-height zone
 // (1/2 width)

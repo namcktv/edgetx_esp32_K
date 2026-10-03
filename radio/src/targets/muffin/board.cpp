@@ -26,7 +26,7 @@
 #else
 #include "lvgl/lvgl.h"
 #endif
-
+#include "layout.h"
 #include "lvgl_helpers.h"
 
 #include "nvs_flash.h"
@@ -65,7 +65,7 @@ static void board_init_i2c(void) {
     ads_i2c_bus_handle = i2c_0_bus_handle;
 }
 
-#if 0
+// #if 0
 // keep a reference of the layouts so they do not get optimized out by compiler.
 extern LayoutFactory Layout1P2;
 extern LayoutFactory Layout1P3;
@@ -85,7 +85,7 @@ LayoutFactory *layouts[20] = {
     &layout2P1, &Layout2P3, &Layout2x1, &layout2x2, &layout2x3, &layout2x4,
     &layout4P2
 };
-#endif
+// #endif
 
 void boardInit()
 {

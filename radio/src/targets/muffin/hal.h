@@ -84,6 +84,9 @@
 #define KEYS_GPIO_REG_ENTER          2
 #define KEYS_GPIO_PIN_ENTER          4
 
+#define KEYS_GPIO_REG_SYS            1
+#define KEYS_GPIO_PIN_SYS            0
+
 #define KEYS_GPIO_REG_MDL            3
 #define KEYS_GPIO_PIN_MDL            0
 

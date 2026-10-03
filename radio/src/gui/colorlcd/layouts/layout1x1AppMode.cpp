@@ -21,6 +21,7 @@
 
 #include "layout.h"
 
+
 const LayoutOption OPTIONS_LAYOUT_APPMODE[] = {LAYOUT_OPTIONS_END};
 
 class LayoutAppMode : public Layout

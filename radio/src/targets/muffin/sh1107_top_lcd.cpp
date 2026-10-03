@@ -79,39 +79,38 @@ static esp_err_t sh1107_init(void) {
     ESP_ERROR_CHECK(i2c_master_bus_add_device(toplcd_i2c_bus_handle,
             &i2c_dev_conf, &toplcd_handle));
 
-    // Use Double Bytes Commands if necessary, but not Command+Data
-    // Initialization taken from https://github.com/nopnop2002/esp-idf-m5stick
+    // SSD1306-compatible init sequence for a 128x64 display
     lcd_init_cmd_t init_cmds[] = {
-        { 0xAE, { 0 }, 0 }, // Turn display off
-        { 0xDC, { 0 }, 0 }, // Set display start line
-        { 0x00, { 0 }, 0 }, // ...value
-        { 0x81, { 0 }, 0 }, // Set display contrast
-        { 0xFF, { 0 }, 0 }, // ...value
-        { 0x21, { 0 }, 0 }, // Set memory mode
-        { 0xA0, { 0 }, 0 }, // Non-rotated display
-        { 0xC8, { 0 }, 0 }, // landscape, flipped vertical
-        //{ 0xC7, {0}, 0},	// portrait, flipped vertical
+        { 0xAE, { 0 }, 0 }, // Display OFF
+        { 0xD5, { 0 }, 0 }, // Set display clock divide ratio/oscillator frequency
+        { 0x80, { 0 }, 0 }, // Default clock divide ratio
         { 0xA8, { 0 }, 0 }, // Set multiplex ratio
-        { 0x7F, { 0 }, 0 }, // ...value
-        { 0xD3, { 0 }, 0 }, // Set display offset to zero
-        { 0x60, { 0 }, 0 }, // ...value
-        { 0xD5, { 0 }, 0 }, // Set display clock divider
-        { 0x51, { 0 }, 0 }, // ...value
-        { 0xD9, { 0 }, 0 }, // Set pre-charge
-        { 0x22, { 0 }, 0 }, // ...value
-        { 0xDB, { 0 }, 0 }, // Set com detect
-        { 0x35, { 0 }, 0 }, // ...value
-        { 0xB0, { 0 }, 0 }, // Set page address
-        { 0xDA, { 0 }, 0 }, // Set com pins
-        { 0x12, { 0 }, 0 }, // ...value
-        { 0xA4, { 0 }, 0 }, // output ram to display
-        //{ 0xA7, {0}, 0},	// inverted display
-        { 0xA6, { 0 }, 0 }, // Non-inverted display
-        { 0xAF, { 0 }, 0 }, // Turn display on
+        { 0x3F, { 0 }, 0 }, // 1/64 duty
+        { 0xD3, { 0 }, 0 }, // Set display offset
+        { 0x00, { 0 }, 0 }, // No offset
+        { 0x40, { 0 }, 0 }, // Set display start line to 0
+        { 0x81, { 0 }, 0 }, // Set contrast control
+        { 0xFF, { 0 }, 0 }, // Maximum contrast
+        { 0x8D, { 0 }, 0 }, // Charge pump setting
+        { 0x14, { 0 }, 0 }, // Enable internal charge pump
+        { 0x20, { 0 }, 0 }, // Set memory addressing mode
+        { 0x00, { 0 }, 0 }, // Horizontal addressing mode
+        { 0xA1, { 0 }, 0 }, // Segment remap, column 127 mapped to SEG0
+        { 0xC8, { 0 }, 0 }, // COM output scan direction remapped
+        { 0xDA, { 0 }, 0 }, // Set COM pins hardware config
+        { 0x12, { 0 }, 0 },
+        { 0xD9, { 0 }, 0 }, // Set pre-charge period
+        { 0xF1, { 0 }, 0 },
+        { 0xDB, { 0 }, 0 }, // Set VCOMH deselect level
+        { 0x20, { 0 }, 0 },
+        { 0xA4, { 0 }, 0 }, // Display follows RAM content
+        { 0xA6, { 0 }, 0 }, // Normal display
+        { 0x2E, { 0 }, 0 }, // Deactivate scroll
+        { 0xAF, { 0 }, 0 }, // Turn display ON
         { 0, { 0 }, 0xff },
     };
 
-    //Send all the commands
+    // Send all the commands
     uint16_t cmd = 0;
     while (init_cmds[cmd].databytes != 0xff) {
         err = sh1107_send_cmd(init_cmds[cmd].cmd);
@@ -128,13 +127,36 @@ static esp_err_t sh1107_init(void) {
 }
 
 static void sh1107_flush(void) {
-    for (int y = 0; y < OLED_H; y++) {
-        uint8_t columnLow = y & 0x0F;
-        uint8_t columnHigh = (y >> 4) & 0x0F;
-        sh1107_send_cmd(0x10 | columnHigh); // Set Higher Column Start Address for Page Addressing Mode
-        sh1107_send_cmd(0x00 | columnLow); // Set Lower Column Start Address for Page Addressing Mode
-        sh1107_send_cmd( 0xB0 ); // Set Page Start Address for Page Addressing Mode (page 0)
-        i2c_register_write_buf(toplcd_handle, (uint8_t *)oled_buf[y], (OLED_W / 8) + 1);
+    const int pages = OLED_H / 8;
+    const int bytes_per_page = OLED_W;
+
+    uint8_t page_buf[OLED_W + 1];
+
+    for (int page = 0; page < pages; page++) {
+        // SSD1306 page addressing mode
+        sh1107_send_cmd(0xB0 | page);  // Set page address
+        sh1107_send_cmd(0x00);         // Set lower column address
+        sh1107_send_cmd(0x10);         // Set higher column address
+
+        page_buf[0] = 0x40; // Control byte: Co=0, D/C#=1
+        memset(&page_buf[1], 0, bytes_per_page);
+
+        for (int x = 0; x < OLED_W; x++) {
+            uint8_t column = 0;
+
+            for (int bit = 0; bit < 8; bit++) {
+                int y = page * 8 + bit;
+                uint8_t row_byte = oled_buf[y][x / 8 + 1];
+
+                if (row_byte & (1U << (x % 8))) {
+                    column |= (1U << bit);
+                }
+            }
+
+            page_buf[x + 1] = column;
+        }
+
+        i2c_register_write_buf(toplcd_handle, page_buf, sizeof(page_buf));
     }
 }
 
@@ -318,25 +340,30 @@ void toplcdInit()
 void toplcdRefresh()
 {
     reset_oled_buf();
-    draw_str(0, 22, "RXBAT", FONT(STD));
-    const char *rssi_label = "RSSI";
-    draw_str(OLED_W - get_str_width(rssi_label, FONT(STD)), 22, rssi_label, FONT(STD));
-
-    int rxBatterySensor = findTopLcdRxBatterySensor();
-    if (rxBatterySensor >= 0) {
-        const TelemetrySensor &sensor = g_model.telemetrySensors[rxBatterySensor];
-        TelemetryItem &item = telemetryItems[rxBatterySensor];
-        if (item.isAvailable()) {
-            char buf[20] = {0};
-            formatTopLcdVoltage(buf, sizeof(buf), item.value, sensor.prec);
-            draw_str(0, 50, buf, FONT(XL));
+    
+    for (uint8_t idx = 0; idx < MAX_TELEMETRY_SENSORS; idx++) {
+        if (g_model.telemetrySensors[idx].isAvailable()) {
+            TelemetryItem &telemetryItem = telemetryItems[idx];
+            
+            if (strcmp(g_model.telemetrySensors[idx].label, "RxBt") == 0) {
+                const TelemetrySensor &sensor = g_model.telemetrySensors[idx];
+                if (telemetryItem.isAvailable()) {
+                    char buf[20] = {0};
+                    formatTopLcdVoltage(buf, sizeof(buf), telemetryItem.value, sensor.prec);
+                    draw_str(0, 22, "RXBAT", FONT(STD));
+                    draw_str(0, 50, buf, FONT(XL));
+                }
+            }
+            
+            if (strcmp(g_model.telemetrySensors[idx].label, "RQly") == 0) {
+                if (telemetryItem.isAvailable()) {
+                    char buf[20] = {0};
+                    snprintf(buf, sizeof(buf), "%d", (int)telemetryItem.value);
+                    draw_str(OLED_W - get_str_width("RSSI", FONT(STD)), 22, "RSSI", FONT(STD));
+                    draw_str(OLED_W - get_str_width(buf, FONT(XL)), 50, buf, FONT(XL));
+                }
+            }
         }
-    }
-
-    if (TELEMETRY_RSSI() > 0) {
-        char buf[20] = {0};
-        snprintf(buf, sizeof(buf), "%u", TELEMETRY_RSSI());
-        draw_str(OLED_W - get_str_width(buf, FONT(L)), 50, buf, FONT(L));
     }
 
     if (top_lcd_exists) {

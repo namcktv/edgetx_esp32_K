@@ -190,6 +190,14 @@ void postModelLoad(bool alarms)
       storageDirty(EE_MODEL);
     }
 #endif
+#if defined(PCB_MUFFIN)
+  // Force RADIO_INFO widget to appear on muffin target
+  // even if topbarWidgetWidth is already initialized
+  if (!g_model.getTopbarData()->hasWidget(MAX_TOPBAR_ZONES-2)) {
+    g_model.getTopbarData()->setWidgetName(MAX_TOPBAR_ZONES-2, "Radio Info");
+    storageDirty(EE_MODEL);
+  }
+#endif
   }
 #elif LCD_W == 128
   // Prevent GVARS to be off when imported or manually modified yaml

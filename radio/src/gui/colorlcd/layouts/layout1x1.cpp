@@ -22,6 +22,7 @@
 #include "layout.h"
 #include "translations/translations.h"
 
+
 // Zone map: 1x1 (single full-screen zone)
 // clang-format off
 static const uint8_t zmap[] = {

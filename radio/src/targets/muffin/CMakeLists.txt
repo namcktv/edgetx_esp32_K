@@ -80,12 +80,25 @@ if (MULTIMODULE)
   set(SRC ${SRC}
       io/multi_protolist.cpp
   )
-include_directories(${RADIO_SRC_DIR}/fonts/colorlcd gui/${GUI_DIR} gui/${GUI_DIR}/layouts)
-
-file(GLOB THEMES_SRC RELATIVE ${RADIO_SRC_DIR}/gui/colorlcd ${RADIO_SRC_DIR}/gui/colorlcd/themes/*.cpp)
-file(GLOB LAYOUTS_SRC RELATIVE ${RADIO_SRC_DIR}/gui/colorlcd ${RADIO_SRC_DIR}/gui/colorlcd/layouts/*.cpp)
-file(GLOB WIDGETS_SRC RELATIVE ${RADIO_SRC_DIR}/gui/colorlcd ${RADIO_SRC_DIR}/gui/colorlcd/widgets/*.cpp)
 endif()
+
+# Collect GUI components using RELATIVE like in colorlcd/CMakeLists.txt
+# This ensures widgets, themes, and layouts are properly included
+file(GLOB THEMES_SRC RELATIVE ${RADIO_SRC_DIR}/gui/colorlcd
+  ${RADIO_SRC_DIR}/gui/colorlcd/themes/*.cpp)
+
+file(GLOB LAYOUTS_SRC RELATIVE ${RADIO_SRC_DIR}/gui/colorlcd
+  ${RADIO_SRC_DIR}/gui/colorlcd/layouts/*.cpp)
+
+file(GLOB WIDGETS_SRC RELATIVE ${RADIO_SRC_DIR}/gui/colorlcd
+  ${RADIO_SRC_DIR}/gui/colorlcd/widgets/*.cpp)
+
+# Add all collected sources to build (relative paths will be resolved by foreach loop later)
+set(GUI_COMPONENTS_SRC
+  ${THEMES_SRC}
+  ${LAYOUTS_SRC}
+  ${WIDGETS_SRC}
+)
 
 set(HW_DESC_JSON ${FLAVOUR}.json)
 AddHWGenTarget(${HW_DESC_JSON} mcp23017_keys mcp23017_keys.inc)
