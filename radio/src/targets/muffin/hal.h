@@ -74,10 +74,10 @@
 //  The REG is not zero-indexed since REG=0 causes some issue
 //    REG for the port, 1 - G0Ax, 2 - G0Bx, 3 - G1Ax, 4 - G1Bx
 //    PIN for the pin num in the port
-#define KEYS_GPIO_REG_DOWN           3
-#define KEYS_GPIO_PIN_DOWN           1
-#define KEYS_GPIO_REG_UP             3
-#define KEYS_GPIO_PIN_UP             3
+#define KEYS_GPIO_REG_PAGEDN         3
+#define KEYS_GPIO_PIN_PAGEDN         1
+#define KEYS_GPIO_REG_PAGEUP         3
+#define KEYS_GPIO_PIN_PAGEUP         3
 #define KEYS_GPIO_REG_EXIT           2
 #define KEYS_GPIO_PIN_EXIT           6
 
@@ -117,5 +117,11 @@
 #define SWITCHES_GPIO_PIN_C_H        2
 #define SWITCHES_GPIO_REG_D          2
 #define SWITCHES_GPIO_PIN_D          5
+// #define SWITCHES_GPIO_REG_E          2
+// #define SWITCHES_GPIO_PIN_E          5
+
+// #define SWITCHES_GPIO_REG_F          2
+// #define SWITCHES_GPIO_PIN_F          5
+
 
 #endif // _HAL_H_

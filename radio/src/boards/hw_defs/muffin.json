@@ -53,7 +53,7 @@
         "adc": "EXT",
         "gpio": null,
         "pin": "ADS1X15_REG_CONFIG_MUX_DIFF_0_1",
-        "channel": 1,
+        "channel": 0,
         "label": "F1",
         "short_label": "F1",
         "default": "POT"
@@ -64,7 +64,7 @@
         "adc": "EXT",
         "gpio": null,
         "pin": "ADS1X15_REG_CONFIG_MUX_DIFF_0_1",
-        "channel": 0,
+        "channel": 1,
         "label": "F2",
         "short_label": "F2",
         "default": "POT"
@@ -74,7 +74,7 @@
         "type": "VBAT",
         "adc": "EXT",
         "gpio": null,
-        "pin": "ADS1X15_REG_CONFIG_MUX_DIFF_2_3",
+        "pin": "ADS1X15_REG_CONFIG_MUX_SINGLE_2",
         "channel": 0
       }
     ]
@@ -117,7 +117,29 @@
       "pin": "GPIO_PIN_5",
       "default": "2POS",
       "display": null
-    }
+    }//,
+    // {
+    //   "name": "SE",
+    //   "type": "3POS",
+    //   "flags": 0,
+    //   "gpio_high": "MCP_PORT_2",
+    //   "pin_high": "GPIO_PIN_2",
+    //   "gpio_low": "MCP_PORT_2",
+    //   "pin_low": "GPIO_PIN_3",
+    //   "default": "2POS",
+    //   "display": null
+    // },
+    // {
+    //   "name": "SF",
+    //   "type": "3POS",
+    //   "flags": 0,
+    //   "gpio_high": "MCP_PORT_2",
+    //   "pin_high": "GPIO_PIN_2",
+    //   "gpio_low": "MCP_PORT_2",
+    //   "pin_low": "GPIO_PIN_3",
+    //   "default": "2POS",
+    //   "display": null
+    // }
   ],
   "keys": [
     {
@@ -126,7 +148,7 @@
       "active_low": true,
       "key": "KEY_EXIT",
       "name": "EXIT",
-      "label": "Exit"
+      "label": "RTN"
     },
     {
       "gpio": "MCP_PORT_2",
@@ -140,17 +162,17 @@
       "gpio": "MCP_PORT_3",
       "pin": "GPIO_PIN_3",
       "active_low": true,
-      "key": "KEY_UP",
-      "name": "UP",
-      "label": "Up"
+      "key": "KEY_PAGEUP",
+      "name": "PAGEUP",
+      "label": "PAGE<"
     },
     {
       "gpio": "MCP_PORT_3",
       "pin": "GPIO_PIN_1",
       "active_low": true,
-      "key": "KEY_DOWN",
-      "name": "DOWN",
-      "label": "Down"
+      "key": "KEY_PAGEDN",
+      "name": "PAGEDN",
+      "label": "PAGE>"
     },
     {
       "gpio": "MCP_PORT_3",
@@ -159,7 +181,15 @@
       "key": "KEY_MODEL",
       "name": "MDL",
       "label": "MDL"
-    }
+    },
+    {
+    "gpio": "MCP_PORT_1",
+    "pin": "GPIO_PIN_0",
+    "active_low": true,
+    "key": "KEY_SYS",
+    "name": "SYS",
+    "label": "SYS"
+  }
   ],
   "trims": [
     {

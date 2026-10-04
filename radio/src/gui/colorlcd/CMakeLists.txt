@@ -2,7 +2,7 @@ if(HARDWARE_KEYS)
   add_definitions(-DHARDWARE_KEYS)
 endif()
 
-if(HARWARE_TOUCH)
+if(HARDWARE_TOUCH)
   add_definitions(-DHARDWARE_TOUCH)
 endif()
 
@@ -17,6 +17,7 @@ include_directories(
   ${RADIO_SRC_DIR}/gui/colorlcd/setup_menus
   ${RADIO_SRC_DIR}/gui/colorlcd/themes
   ${RADIO_SRC_DIR}/gui/colorlcd/controls
+  ${RADIO_SRC_DIR}/gui/colorlcd/widgets
 )
 
 file(GLOB THEMES_SRC RELATIVE ${RADIO_SRC_DIR}/gui/colorlcd
