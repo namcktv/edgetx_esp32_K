@@ -15,4 +15,14 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 project(edgetx)
 
-target_link_libraries(${project_elf} PRIVATE radiolib_esp32 board_lib board stdc++ gcc supc++)
+#target_link_libraries(${project_elf} PRIVATE radiolib_esp32 board_lib board stdc++ gcc supc++)
+target_link_libraries(${project_elf} PRIVATE
+    -Wl,--whole-archive
+    radiolib_esp32
+    -Wl,--no-whole-archive
+    board_lib
+    board
+    stdc++
+    gcc
+    supc++
+)

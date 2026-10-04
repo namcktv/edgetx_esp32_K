@@ -38,8 +38,8 @@
 #define ADC_CHANNEL_STICK_RH
 
 // For ADS1015 driver, the ADC_CHANNEL_<xyz> is defined to the chip it is wired to
-#define ADC_CHANNEL_POT1                1
-#define ADC_CHANNEL_POT2                0
+#define ADC_CHANNEL_POT1                0
+#define ADC_CHANNEL_POT2                1
 
 #define ADC_CHANNEL_BATT                0
 #define ADC_CHANNEL_RTC_BAT             0

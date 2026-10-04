@@ -27,6 +27,7 @@
 #include "lvgl/lvgl.h"
 #endif
 #include "layout.h"
+#include "widget.h"
 #include "lvgl_helpers.h"
 
 #include "nvs_flash.h"
