@@ -332,7 +332,10 @@ void toplcdInit()
         top_lcd_exists = false;
     } else {
         TRACE("SH1107 Top LCD initialized");
-        draw_str(0, 40, "EdgeTX", FONT(XL));
+        draw_str((OLED_W - get_str_width("EdgeTX", FONT(XL))) / 2,
+         40,
+         "EdgeTX",
+         FONT(XL));
         sh1107_flush();
     }
 }
@@ -355,7 +358,7 @@ void toplcdRefresh()
                 }
             }
             
-            if (strcmp(g_model.telemetrySensors[idx].label, "RQly") == 0) {
+            if (strcmp(g_model.telemetrySensors[idx].label, "TRSS") == 0) {
                 if (telemetryItem.isAvailable()) {
                     char buf[20] = {0};
                     snprintf(buf, sizeof(buf), "%d", (int)telemetryItem.value);
@@ -363,6 +366,11 @@ void toplcdRefresh()
                     draw_str(OLED_W - get_str_width(buf, FONT(XL)), 50, buf, FONT(XL));
                 }
             }
+        } else {
+            draw_str((OLED_W - get_str_width("EdgeTX", FONT(XL))) / 2,
+         40,
+         "EdgeTX",
+         FONT(XL));
         }
     }
 

@@ -127,7 +127,7 @@ static void task_adc() {
                            getAnalogValue(adcGetInputOffset(ADC_INPUT_VBAT)));
         } else {
             sleep_ms(MS_BETWEEN_CHANNEL);
-            startADCReading(ads[ads_channels[index].ads_index], ads_channels[index].mux, GAIN_TWO);
+            startADCReading(ads[ads_channels[index].ads_index], ads_channels[index].mux, GAIN_ONE);
             while(!isConversionDone(ads[ads_channels[index].ads_index]));
             int16_t volt = getLastConversionResults(ads[ads_channels[index].ads_index]);
             //TRACE("=X==== %d %x => %d", index, volt, ads_channels[index].etx_adc_channel);

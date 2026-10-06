@@ -107,7 +107,7 @@ From Kconfig
 #define INTMOD_ESP_UART_TX GPIO_NUM_2 // INTMOD_RX
 #define INTMOD_ESP_UART_RX GPIO_NUM_1 // INTMOD_TX
 
-#define EXTMOD_UART_TX GPIO_NUM_15  // EXTMOD_RX
+#define EXTMOD_UART_TX GPIO_NUM_0  // EXTMOD_RX
 #define EXTMOD_UART_RX GPIO_NUM_8   // EXTMOD_TX
 
 #define SD_DEDICATED_SPI
@@ -124,6 +124,9 @@ From Kconfig
 #define I2S_LRCLK GPIO_NUM_18
 
 #define SOFT_PWR_CTRL
+
+#define USB_VBUS_GPIO GPIO_NUM_15
+
 uint32_t pwrCheck();
 void pwrOn();
 void pwrOff();

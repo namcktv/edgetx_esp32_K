@@ -117,29 +117,7 @@
       "pin": "GPIO_PIN_5",
       "default": "2POS",
       "display": null
-    }//,
-    // {
-    //   "name": "SE",
-    //   "type": "3POS",
-    //   "flags": 0,
-    //   "gpio_high": "MCP_PORT_2",
-    //   "pin_high": "GPIO_PIN_2",
-    //   "gpio_low": "MCP_PORT_2",
-    //   "pin_low": "GPIO_PIN_3",
-    //   "default": "2POS",
-    //   "display": null
-    // },
-    // {
-    //   "name": "SF",
-    //   "type": "3POS",
-    //   "flags": 0,
-    //   "gpio_high": "MCP_PORT_2",
-    //   "pin_high": "GPIO_PIN_2",
-    //   "gpio_low": "MCP_PORT_2",
-    //   "pin_low": "GPIO_PIN_3",
-    //   "default": "2POS",
-    //   "display": null
-    // }
+    }
   ],
   "keys": [
     {
